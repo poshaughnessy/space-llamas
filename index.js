@@ -80,11 +80,17 @@ function onOrientation(data) {
 
     //console.log('roll, pitch, yaw', roll, pitch, yaw);
 
-    cube.rotation = new BABYLON.Vector3(degreesToRadians(roll), 
-        degreesToRadians(pitch), degreesToRadians(yaw));
-
-    //cube.addRotation(0, -Math.PI/2, 0);
+    // https://doc.babylonjs.com/resources/rotation_conventions
+    // roll = z, yaw = y, pitch = x
+    cube.rotation = new BABYLON.Vector3(degreesToRadians(pitch), 
+        degreesToRadians(yaw), degreesToRadians(roll));
     
+}
+
+function onButtonPress(event) {
+    if (event.detail.value === 1) {
+        console.log('Boom!', event);
+    }
 }
 
 async function connectInput() {
@@ -109,8 +115,10 @@ async function connectInput() {
             await thingy.led.write(newLedConfiguration);  
 
             await thingy.eulerorientation.start();
+            await thingy.button.start();
 
             await thingy.addEventListener('eulerorientation', onOrientation);
+            await thingy.addEventListener('button', onButtonPress);
 
         } else {
             console.log('Unable to connect to Thingy, is Web Bluetooth supported?');
