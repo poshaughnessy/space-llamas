@@ -36,6 +36,15 @@ var createScene = function () {
     space.material = starfieldMaterial;
     */
 
+    var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+    var text1 = new BABYLON.GUI.TextBlock();
+    text1.text = "Space LLamas";
+    text1.color = "#edd615";
+    text1.fontSize = 24;
+
+    gui.addControl(text1); 
+
     return scene;
 
 };
