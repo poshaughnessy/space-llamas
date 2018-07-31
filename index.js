@@ -2,6 +2,8 @@ const canvas = document.getElementById('renderCanvas');
 
 const engine = new BABYLON.Engine(canvas, true);
 
+let cube;
+
 function createScene() {
 
     // Create the scene space
@@ -19,7 +21,7 @@ function createScene() {
     const light2 = new BABYLON.PointLight('light2', new BABYLON.Vector3(0, 1, -1), scene);
 
     // This is where you create and manipulate meshes
-    const sphere = BABYLON.MeshBuilder.CreateSphere('sphere', {diameter: 0.5}, scene);
+    cube = BABYLON.MeshBuilder.CreateBox('box', 0.5, scene);
 
     /*
     const spaceScale = 10.0;
@@ -63,6 +65,18 @@ window.addEventListener('resize', function () {
 
 const thingy = new Thingy({logEnabled: true});
 
+function onOrientation(data) {
+    
+    const {roll, pitch, yaw} = data.detail;
+
+    console.log('roll, pitch, yaw', roll, pitch, yaw);
+
+    cube.rotation.x = roll;
+    cube.rotation.y = pitch;
+    cube.rotation.z = yaw;
+    
+}
+
 async function connectInput() {
     try {
         const success = await thingy.connect();
@@ -76,11 +90,14 @@ async function connectInput() {
                 color: 'red',
                 intensity: 50,
                 delay: 1000,
-            }
+            };
             
             await thingy.led.write(newLedConfiguration);  
 
-            //await thingy.absoluteorientation.startNotifications();
+            await thingy.eulerorientation.start();
+
+            await thingy.addEventListener('eulerorientation', onOrientation);
+
         } else {
             console.log('Unable to connect to Thingy, is Web Bluetooth supported?');
         }
