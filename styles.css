@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background: #333;
+  color: #edd615;
+  overflow: hidden;
+}
+
+#renderCanvas {
+  width: 100%;
+  height: 100%;
+}
