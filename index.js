@@ -68,8 +68,19 @@ async function connectInput() {
         const success = await thingy.connect();
 
         if (success) {
-            //await thingy.temperatureEnable(onTemperatureUpdate, true);
-            //await thingy.orientation.startNotifications();
+
+            console.log('thingy', thingy);
+
+            const newLedConfiguration = {
+                mode: 'breathe',
+                color: 'red',
+                intensity: 50,
+                delay: 1000,
+            }
+            
+            await thingy.led.write(newLedConfiguration);  
+
+            //await thingy.absoluteorientation.startNotifications();
         } else {
             console.log('Unable to connect to Thingy, is Web Bluetooth supported?');
         }
@@ -77,10 +88,6 @@ async function connectInput() {
     } catch(error) {
         console.error('Error connecting to Nordic Thingy', error);
     }
-}
-function onTemperatureUpdate(data) {
-    const el = document.querySelector('#temperature');
-    el.innerHTML = `Temperature: ${data.value.toFixed(1)} ${data.unit}`;
 }
 
 const btnConnect = document.getElementById('connectInput');
