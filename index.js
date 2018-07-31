@@ -1,8 +1,13 @@
 const canvas = document.getElementById('renderCanvas');
+const btnConnect = document.getElementById('connectInput');
 
 const engine = new BABYLON.Engine(canvas, true);
 
-let cube;
+let cube,
+    guiText;
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 function createScene() {
 
@@ -13,7 +18,7 @@ function createScene() {
     scene.clearColor = new BABYLON.Color3(0.05, 0.05, 0.05);
 
     // Add a camera to the scene and attach it to the canvas
-    const camera = new BABYLON.ArcRotateCamera('Camera', Math.PI / 2, Math.PI / 2, 2, BABYLON.Vector3.Zero(), scene);
+    const camera = new BABYLON.ArcRotateCamera('Camera', Math.PI / 2, Math.PI / 2, 5, BABYLON.Vector3.Zero(), scene);
     camera.attachControl(canvas, true);
 
     // Add lights to the scene
@@ -38,14 +43,14 @@ function createScene() {
     space.material = starfieldMaterial;
     */
 
-    const gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    const gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
-    const text1 = new BABYLON.GUI.TextBlock();
-    text1.text = "Space LLamas";
-    text1.color = "#edd615";
-    text1.fontSize = 24;
+    guiText = new BABYLON.GUI.TextBlock();
+    guiText.text = 'Space LLamas';
+    guiText.color = '#edd615';
+    guiText.fontSize = 24;
 
-    gui.addControl(text1); 
+    gui.addControl(guiText); 
 
     return scene;
 
@@ -75,9 +80,10 @@ function onOrientation(data) {
 
     //console.log('roll, pitch, yaw', roll, pitch, yaw);
 
-    cube.rotation.x = degreesToRadians(roll);
-    cube.rotation.y = degreesToRadians(pitch);
-    cube.rotation.z = degreesToRadians(yaw)
+    cube.rotation = new BABYLON.Vector3(degreesToRadians(roll), 
+        degreesToRadians(pitch), degreesToRadians(yaw));
+
+    //cube.addRotation(0, -Math.PI/2, 0);
     
 }
 
@@ -88,6 +94,10 @@ async function connectInput() {
         if (success) {
 
             console.log('thingy', thingy);
+
+            guiText.text = 'Connected';
+            btnConnect.disabled = 'disabled';
+            btnConnect.innerText = 'Connected';
 
             const newLedConfiguration = {
                 mode: 'breathe',
@@ -111,5 +121,4 @@ async function connectInput() {
     }
 }
 
-const btnConnect = document.getElementById('connectInput');
 btnConnect.addEventListener('click', connectInput);
