@@ -65,15 +65,19 @@ window.addEventListener('resize', function () {
 
 const thingy = new Thingy({logEnabled: true});
 
+function degreesToRadians(degrees) {
+    return degrees * Math.PI / 180;
+}
+
 function onOrientation(data) {
     
     const {roll, pitch, yaw} = data.detail;
 
-    console.log('roll, pitch, yaw', roll, pitch, yaw);
+    //console.log('roll, pitch, yaw', roll, pitch, yaw);
 
-    cube.rotation.x = roll;
-    cube.rotation.y = pitch;
-    cube.rotation.z = yaw;
+    cube.rotation.x = degreesToRadians(roll);
+    cube.rotation.y = degreesToRadians(pitch);
+    cube.rotation.z = degreesToRadians(yaw)
     
 }
 
