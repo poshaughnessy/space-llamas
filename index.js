@@ -46,7 +46,7 @@ function createScene() {
     const gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
     guiText = new BABYLON.GUI.TextBlock();
-    guiText.text = 'Space LLamas v0.1';
+    guiText.text = 'Space LLamas v0.1.2';
     guiText.color = '#edd615';
     guiText.fontSize = 24;
 
@@ -96,9 +96,20 @@ function onButtonPress(event) {
 
 function onTemperature(data) {
     console.log('Temp', data.detail.value);
-
     guiText.text = data.detail.value + ' ' + data.detail.unit;
+}
 
+function onColor(data) {
+    console.log('Color r,g,b', data.detail.red, data.detail.green, data.detail.blue);
+}
+
+function onHumidity(data) {
+    console.log('Humidity', data.detail.value + data.detail.unit);
+}
+
+function onGas(data) {
+    console.log('Gas TVOC, eCO2', data.detail.TVOC.value +  data.detail.TVOC.unit, 
+        data.detail.eCO2.value + data.detail.eCO2.unit);
 }
 
 async function connectInput() {
@@ -128,8 +139,14 @@ async function connectInput() {
             thingy.addEventListener('eulerorientation', onOrientation);
             thingy.addEventListener('button', onButtonPress);
             thingy.addEventListener('temperature', onTemperature);
+            thingy.addEventListener('color', onColor);
+            thingy.addEventListener('humidity', onHumidity);
+            thingy.addEventListener('gas', onGas);
 
             await thingy.temperature.start();
+            await thingy.color.start();
+            await thingy.humidity.start();
+            await thingy.gas.start();
 
         } else {
             console.log('Unable to connect to Thingy, is Web Bluetooth supported?');
