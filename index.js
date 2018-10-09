@@ -46,7 +46,7 @@ function createScene() {
     const gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
     guiText = new BABYLON.GUI.TextBlock();
-    guiText.text = 'Space LLamas';
+    guiText.text = 'Space LLamas v0.1';
     guiText.color = '#edd615';
     guiText.fontSize = 24;
 
@@ -90,7 +90,15 @@ function onOrientation(data) {
 function onButtonPress(event) {
     if (event.detail.value === 1) {
         console.log('Boom!', event);
+        guiText.text = 'Boom!';
     }
+}
+
+function onTemperature(data) {
+    console.log('Temp', data.detail.value);
+
+    guiText.text = data.detail.value + ' ' + data.detail.unit;
+
 }
 
 async function connectInput() {
@@ -101,7 +109,7 @@ async function connectInput() {
 
             console.log('thingy', thingy);
 
-            guiText.text = 'Connected';
+            guiText.text = '';
             btnConnect.disabled = 'disabled';
             btnConnect.innerText = 'Connected';
 
@@ -117,8 +125,11 @@ async function connectInput() {
             await thingy.eulerorientation.start();
             await thingy.button.start();
 
-            await thingy.addEventListener('eulerorientation', onOrientation);
-            await thingy.addEventListener('button', onButtonPress);
+            thingy.addEventListener('eulerorientation', onOrientation);
+            thingy.addEventListener('button', onButtonPress);
+            thingy.addEventListener('temperature', onTemperature);
+
+            await thingy.temperature.start();
 
         } else {
             console.log('Unable to connect to Thingy, is Web Bluetooth supported?');
